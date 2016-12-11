@@ -15,6 +15,7 @@ public class Hello {
     Wiki login(String user, String password) throws IOException, FailedLoginException {
         bot = new Wiki("uk.wikipedia.org");
         bot.login(user, password);
+        bot.setMarkBot(true);
         return bot;
     }
 
@@ -46,10 +47,7 @@ public class Hello {
                     System.out.println(newLine);
                 }
             }
-
-
-
-            //bot.edit(page, output, "вул. + пробіл");
+            bot.edit(page, output, "вул. + пробіл");
         }
 
 
