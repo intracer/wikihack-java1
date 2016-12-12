@@ -21,36 +21,35 @@ public class Hello {
 
     void fixDot(String page) throws IOException, LoginException {
 
-        Pattern p = Pattern.compile("(вул\\.)(\\S)");
-
         String text = bot.getPageText(page);
 
+        Pattern p = Pattern.compile("(вул\\.)(\\S)");
         Matcher m = p.matcher(text);
+
         if (m.find()) {
             System.out.println("Заміна в статті  " + page );
             String output = m.replaceAll("вул. $2");
 
-            String[] oldlines = text.split("\n");
+            printDiff(text, p, output);
 
-            String[] newlines = output.split("\n");
-
-            for (int i = 0; i < oldlines.length; i++) {
-                String old = oldlines[i];
-                Matcher m2 = p.matcher(old);
-                if (m2.find()) {
-                    String newLine = newlines[i];
-
-                    System.out.println(" == Старий рядок == ");
-                    System.out.println(old);
-
-                    System.out.println(" == Новий рядок == ");
-                    System.out.println(newLine);
-                }
-            }
             bot.edit(page, output, "вул. + пробіл");
         }
+    }
 
+    private void printDiff(String text, Pattern p, String output) {
+        String[] oldlines = text.split("\n");
+        String[] newlines = output.split("\n");
 
+        for (int i = 0; i < oldlines.length; i++) {
+            String old = oldlines[i];
+            Matcher m2 = p.matcher(old);
+            if (m2.find()) {
+                String newLine = newlines[i];
+
+                System.out.println(" == Старий рядок == \n" + old);
+                System.out.println(" == Новий рядок == \n" + newLine);
+            }
+        }
     }
 
     public static void main(String[] args) throws IOException, LoginException {
@@ -59,7 +58,6 @@ public class Hello {
         String user = args[0];
         String password = args[1];
         Wiki bot = hello.login(user, password);
-
 
         String[] members = bot.getCategoryMembers("Села Вінницької області", false, 0);
 
@@ -70,8 +68,5 @@ public class Hello {
 
             hello.fixDot(page);
         }
-
     }
-
-
 }
