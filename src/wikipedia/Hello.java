@@ -12,6 +12,24 @@ public class Hello {
 
     Wiki bot;
 
+    public static void main(String[] args) throws IOException, LoginException {
+
+        Hello hello = new Hello();
+        String user = args[0];
+        String password = args[1];
+        Wiki bot = hello.login(user, password);
+
+        String[] members = bot.getCategoryMembers("Села Вінницької області", false, 0);
+
+        System.out.println(members.length);
+
+        for (String page : members) {
+            System.out.println(page);
+
+            hello.replaceRegex(page, "(вул\\.)(\\S)", "вул. $2");
+        }
+    }
+
     Wiki login(String user, String password) throws IOException, FailedLoginException {
         bot = new Wiki("uk.wikipedia.org");
         bot.login(user, password);
@@ -52,21 +70,4 @@ public class Hello {
         }
     }
 
-    public static void main(String[] args) throws IOException, LoginException {
-
-        Hello hello = new Hello();
-        String user = args[0];
-        String password = args[1];
-        Wiki bot = hello.login(user, password);
-
-        String[] members = bot.getCategoryMembers("Села Вінницької області", false, 0);
-
-        System.out.println(members.length);
-
-        for (String page : members) {
-            System.out.println(page);
-
-            hello.replaceRegex(page, "(вул\\.)(\\S)", "вул. $2");
-        }
-    }
 }
