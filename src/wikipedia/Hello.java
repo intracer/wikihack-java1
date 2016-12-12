@@ -19,16 +19,16 @@ public class Hello {
         return bot;
     }
 
-    void fixDot(String page) throws IOException, LoginException {
+    void replaceRegex(String page, String regex, String replacement) throws IOException, LoginException {
 
         String text = bot.getPageText(page);
 
-        Pattern p = Pattern.compile("(вул\\.)(\\S)");
+        Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(text);
 
         if (m.find()) {
             System.out.println("Заміна в статті  " + page );
-            String output = m.replaceAll("вул. $2");
+            String output = m.replaceAll(replacement);
 
             printDiff(text, p, output);
 
@@ -66,7 +66,7 @@ public class Hello {
         for (String page : members) {
             System.out.println(page);
 
-            hello.fixDot(page);
+            hello.replaceRegex(page, "(вул\\.)(\\S)", "вул. $2");
         }
     }
 }
